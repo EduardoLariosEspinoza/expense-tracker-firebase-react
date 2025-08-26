@@ -1,25 +1,46 @@
-import { auth, provider } from "../../config/firebase";
-import { signInWithPopup } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-
 function ExpenseTracker() {
-
-    const authWithGoogle = async () => {
-        // This is going to return the information of the user that just signed in
-        const result = await signInWithPopup(auth, provider);
-        const authInfo = {
-            userID: result.user.uid,
-            name: result.user.displayName,
-            profilePhoto: result.user.photoURL,
-            isAuth: true,
-        }
-        localStorage.setItem("auth", JSON.stringify(authInfo));
-    }
-
   return (
-    <div className="login-page">
-      <button className="login-with-google-btn" onClick={authWithGoogle}>Sign In with Google</button>
-    </div>
+    <>
+      <div className="expense-tracker">
+        <div className="container">
+          <h1>Expense Tracker</h1>
+
+          <div className="balance">
+            <h3>Your balance</h3>
+            <h2>$0.00</h2>
+          </div>
+
+          <div className="summary">
+            <div className="income">
+              <h4>Income</h4>
+              <p>$0.00</p>
+            </div>
+
+            <div className="expenses">
+              <h4>Expenses</h4>
+              <p>$0.00</p>
+            </div>
+          </div>
+
+          <form className="add-transaction">
+            <input type="text" placeholder="Description" required />
+            <input type="number" placeholder="Amount" required />
+
+            <input type="radio" id="expense" value="expense" />
+            <label htmlFor="expense">Expense</label>
+
+            <input type="radio" id="income" value="income" />
+            <label htmlFor="income">Income</label>
+
+            <button type="submit">Add Transaction</button>
+          </form>
+        </div>
+      </div>
+
+      <div className="transactions">
+        <h3>Transactions</h3>
+      </div>
+    </>
   );
 }
 
