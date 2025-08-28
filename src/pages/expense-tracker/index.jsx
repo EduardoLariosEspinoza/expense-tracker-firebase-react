@@ -8,6 +8,16 @@ function ExpenseTracker() {
   const [transactionAmount, setTransactionAmount] = useState(0);
   const [transactionType, setTransactionType] = useState("expense");
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await addTransaction({ description, transactionAmount, transactionType });
+
+    setDescription("");
+    setTransactionAmount(0);
+    setTransactionType("expense");
+  };
+
   return (
     <>
       <div className="expense-tracker">
@@ -31,7 +41,7 @@ function ExpenseTracker() {
             </div>
           </div>
 
-          <form className="add-transaction">
+          <form className="add-transaction" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Description"
@@ -49,7 +59,7 @@ function ExpenseTracker() {
               type="radio"
               id="expense"
               value="expense"
-              defaultChecked
+              checked={transactionType === "expense"}
               onChange={(e) => setTransactionType(e.target.value)}
             />
             <label htmlFor="expense">Expense</label>
@@ -58,6 +68,7 @@ function ExpenseTracker() {
               type="radio"
               id="income"
               value="income"
+              checked={transactionType === "income"}
               onChange={(e) => setTransactionType(e.target.value)}
             />
             <label htmlFor="income">Income</label>
