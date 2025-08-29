@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import useAddTransaction from "../../hooks/useAddTransaction";
+import useGetTransactions from "../../hooks/useGetTransactions";
+import useGetUserInfo from "../../hooks/useGetUserInfo";
+import "./styles.css";
 
 function ExpenseTracker() {
   const { addTransaction } = useAddTransaction();
+  const { transactions } = useGetTransactions();
+  const { name, profilePhoto } = useGetUserInfo();
 
   const [description, setDescription] = useState("");
   const [transactionAmount, setTransactionAmount] = useState(0);
@@ -80,6 +85,28 @@ function ExpenseTracker() {
 
       <div className="transactions">
         <h3>Transactions</h3>
+        <ul>
+          {transactions.map((transaction, index) => {
+            const { description, transactionAmount, transactionType } =
+              transaction;
+            return (
+              <li key={index}>
+                <h4> {description} </h4>
+                <p>
+                  ${transactionAmount} •{" "}
+                  <label
+                    style={{
+                      color: transactionType === "expense" ? "red" : "green",
+                    }}
+                  >
+                    {" "}
+                    {transactionType}{" "}
+                  </label>
+                </p>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </>
   );
