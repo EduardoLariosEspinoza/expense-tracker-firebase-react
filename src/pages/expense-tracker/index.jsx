@@ -9,27 +9,27 @@ import "./styles.css";
 
 function ExpenseTracker() {
   const { addTransaction } = useAddTransaction();
-  const { transactions, balance } = useGetTransactions();
+  const { transactions, balanceTransactions } = useGetTransactions();
   const { name, profilePhoto } = useGetUserInfo();
   const navigate = useNavigate();
+
+  const { balance, totalExpense, totalIncome } = balanceTransactions;
 
   if (!auth.currentUser) {
     navigate("/");
   }
 
   const [description, setDescription] = useState("");
-  const [transactionAmount, setTransactionAmount] = useState(0);
+  const [transactionAmount, setTransactionAmount] = useState("");
   const [transactionType, setTransactionType] = useState("expense");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await addTransaction({ description, transactionAmount, transactionType });
-    
-    e.target.reset();
+    addTransaction({ description, transactionAmount, transactionType });
 
     setDescription("");
-    setTransactionAmount(0);
+    setTransactionAmount("");
     setTransactionType("expense");
   };
 
@@ -51,18 +51,22 @@ function ExpenseTracker() {
 
           <div className="balance">
             <h3>Your balance</h3>
-            <h2>${balance.income - balance.expense}</h2>
+            {balance >= 0 ? (
+              <h2 style={{ color: "green" }}>${balance}</h2>
+            ) : (
+              <h2 style={{ color: "red" }}>-${balance*-1}</h2>
+            )}
           </div>
 
           <div className="summary">
             <div className="income">
               <h4>Income</h4>
-              <p>${balance.income}</p>
+              <p>${totalIncome}</p>
             </div>
 
             <div className="expenses">
               <h4>Expenses</h4>
-              <p>${balance.expense}</p>
+              <p>${totalExpense}</p>
             </div>
           </div>
 
@@ -70,12 +74,14 @@ function ExpenseTracker() {
             <input
               type="text"
               placeholder="Description"
+              value={description}
               required
               onChange={(e) => setDescription(e.target.value)}
             />
             <input
               type="number"
               placeholder="Amount"
+              value={transactionAmount}
               required
               onChange={(e) => setTransactionAmount(Number(e.target.value))}
             />
