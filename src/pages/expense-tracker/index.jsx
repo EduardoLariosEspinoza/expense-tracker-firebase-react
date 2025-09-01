@@ -9,7 +9,7 @@ import "./styles.css";
 
 function ExpenseTracker() {
   const { addTransaction } = useAddTransaction();
-  const { transactions } = useGetTransactions();
+  const { transactions, balance } = useGetTransactions();
   const { name, profilePhoto } = useGetUserInfo();
   const navigate = useNavigate();
 
@@ -25,6 +25,8 @@ function ExpenseTracker() {
     e.preventDefault();
 
     await addTransaction({ description, transactionAmount, transactionType });
+    
+    e.target.reset();
 
     setDescription("");
     setTransactionAmount(0);
@@ -49,18 +51,18 @@ function ExpenseTracker() {
 
           <div className="balance">
             <h3>Your balance</h3>
-            <h2>$0.00</h2>
+            <h2>${balance.income - balance.expense}</h2>
           </div>
 
           <div className="summary">
             <div className="income">
               <h4>Income</h4>
-              <p>$0.00</p>
+              <p>${balance.income}</p>
             </div>
 
             <div className="expenses">
               <h4>Expenses</h4>
-              <p>$0.00</p>
+              <p>${balance.expense}</p>
             </div>
           </div>
 
