@@ -2,7 +2,7 @@ import { useState } from "react";
 import useAddTransaction from "../../hooks/useAddTransaction";
 import useGetTransactions from "../../hooks/useGetTransactions";
 import useGetUserInfo from "../../hooks/useGetUserInfo";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import "./styles.css";
@@ -14,6 +14,10 @@ function ExpenseTracker() {
   const navigate = useNavigate();
 
   const { balance, totalExpense, totalIncome } = balanceTransactions;
+
+  if (!auth.currentUser) {
+    navigate("/");
+  }
 
   const [description, setDescription] = useState("");
   const [transactionAmount, setTransactionAmount] = useState("");
@@ -38,10 +42,6 @@ function ExpenseTracker() {
       console.error("Error signing out:", error);
     }
   };
-
-  if (!localStorage.getItem("auth")) {
-    return <Navigate to="/" />;
-  }
 
   return (
     <>
